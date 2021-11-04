@@ -16,6 +16,8 @@ class BackendServer:
         self._app.add_url_rule('/up', 'up', self.up)
         self._app.add_url_rule('/get_tick', 'get_tick', self.return_tick)
         self._app.add_url_rule('/get_timeline', 'get_timeline', self.get_timeline)
+        self._app.add_url_rule('/reset_tick', 'reset_tick', self.reset_counter)
+
 
         self.time_series = pd.read_csv("time_series.csv")
         self.time_series["unix"] = pd.to_datetime(self.time_series["time"]).astype(np.int64) // 10**6

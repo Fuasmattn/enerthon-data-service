@@ -65,7 +65,10 @@ class BackendServer:
         return "OK"
 
     def _get_ticked_timeline(self):
-        return jsonify(self.timeline + [x for x in self.tick_timeline.values() if x is not None])
+        response =  jsonify(self.timeline + [x for x in self.tick_timeline.values() if x is not None])
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
 
     def _process_tick_for_timeline(self, data):
         # print(data)

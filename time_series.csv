@@ -1,4 +1,4 @@
-,time,name,ist,pot_plos,pot_minus,netzbetreiber,command
+Index,time,name,ist,pot_plus,pot_minus,netzbetreiber,command
 0,2021-06-01 22:00:00,CSR1WIND001,3.0,0.0,3.0,Netzbetreiber Mitte,0.0
 1,2021-06-01 22:15:00,CSR1WIND001,3.0,0.0,3.0,Netzbetreiber Mitte,0.0
 2,2021-06-01 22:30:00,CSR1WIND001,3.0,0.0,3.0,Netzbetreiber Mitte,0.0

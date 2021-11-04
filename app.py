@@ -27,7 +27,7 @@ class BackendServer:
 
         self.timeline = self._init_timeline()
 
-        self.time_series.drop(columns=["Unnamed: 0", "unix"], inplace=True)
+        self.time_series.drop(columns=["unix"], inplace=True)
         self.time_series["time"] = pd.to_datetime(self.time_series["time"])
 
 
@@ -63,9 +63,20 @@ class BackendServer:
         if self.counter == self.max_counter:
             return jsonify({"No more data"})
         data = self.time_series[self.time_series["time"] == self.time_series.iloc[self.counter]["time"]]
+        print(data.columns)
         # data = self.time_series.iloc[self.counter].to_json()
+        to_return = jsonify({
+            "time": time.mktime(self.time_series.iloc[self.counter]["time"].timetuple()) * 10**3,
+            "PowerPlants": data[["name", "ist", "pot_plus", "pot_minus", "command"]].to_dict(orient="records"),
+            "NetStates": [{
+                "name": "Netzbetreiber Mitte",
+                "ist": data.ist.sum(),
+                "pot_plus": data.pot_plus.sum(),
+                "pot_minus": data.pot_minus.sum()
+            }]
+        })
         self.counter += 1
-        return data.to_json(orient="records")
+        return to_return
 
     def reset_counter(self):
         self.counter = 0

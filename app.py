@@ -67,7 +67,7 @@ class BackendServer:
         data = self.time_series[self.time_series["time"] == self.time_series.iloc[self.counter]["time"]]
         print(data.columns)
         # data = self.time_series.iloc[self.counter].to_json()
-        to_return = jsonify({
+        response = jsonify({
             "time": time.mktime(self.time_series.iloc[self.counter]["time"].timetuple()) * 10**3,
             "PowerPlants": data[["name", "ist", "pot_plus", "pot_minus", "command"]].to_dict(orient="records"),
             "NetStates": [{
@@ -78,14 +78,19 @@ class BackendServer:
             }]
         })
         self.counter += 1
-        return to_return
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
 
     def reset_counter(self):
         self.counter = 0
-        return "Done"
+        response = jsonify(message="done")
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
 
     def get_timeline(self):
-        return jsonify(self.timeline)
+        response = jsonify(self.timeline)
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
 
 
 if __name__=="__main__":

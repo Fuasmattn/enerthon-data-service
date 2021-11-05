@@ -35,6 +35,8 @@ class BackendServer:
         self.time_series.drop(columns=["unix"], inplace=True)
         self.time_series["time"] = pd.to_datetime(self.time_series["time"])
 
+        self.bedarfe = pd.read_csv("bedarfe.csv")
+
 
     def _init_timeline(self):
         timeline = []
@@ -99,6 +101,7 @@ class BackendServer:
         data = self.time_series[self.time_series["time"] == self.time_series.iloc[self.counter]["time"]]
         # print(data.columns)
         # data = self.time_series.iloc[self.counter].to_json()
+        # print(data.ist.sum()+ self.bedarfe.iloc[self.counter].values)
         response = jsonify({
             "time": time.mktime(self.time_series.iloc[self.counter]["time"].timetuple()) * 10**3,
             "PowerPlants": data[["name", "ist", "pot_plus", "pot_minus", "command"]].to_dict(orient="records"),
@@ -106,9 +109,11 @@ class BackendServer:
                 "name": "Netzbetreiber Mitte",
                 "ist": data.ist.sum(),
                 "pot_plus": data.pot_plus.sum(),
-                "pot_minus": data.pot_minus.sum()
+                "pot_minus": data.pot_minus.sum(),
+                "soll": data.ist.sum() + self.bedarfe.iloc[self.counter].bedarfe
             }]
         })
+
         self._process_tick_for_timeline(data)
         self.counter += 1
         response.headers.add("Access-Control-Allow-Origin", "*")
